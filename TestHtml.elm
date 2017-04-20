@@ -28,18 +28,33 @@ type Msg
     | Change String
 
 
+type O
+    = B (String -> String -> String)
+
+
+type A
+    = C String String String
+    | D (String -> Int)
+
+
 model : Model
 model =
-    Model (PlayersModel 1 "name") "contenido"
+    Model (PlayersModel 1 "name") "teset"
 
 
+init : ( Model, Cmd Msg )
+init =
+    ( model, Cmd.none )
 
--- view : Model -> Html msg
--- view model =
---     div [] [ text "Prueba"]
--- view : Model -> Html Msg
--- view model =
---     div [] [ text "Prueba", button [ onClick Off ] [ text "Off" ] ]
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case msg of
+        Change newContent ->
+            ( { model | content = newContent }, Cmd.none )
+
+        _ ->
+            ( model, Cmd.none )
 
 
 view : Model -> Html Msg
@@ -50,6 +65,11 @@ view model =
         ]
 
 
-main : Html Msg
+main : Program Never Model Msg
 main =
-    view model
+    program
+        { init = init
+        , view = view
+        , update = update
+        , subscriptions = (\_ -> Sub.none)
+        }
